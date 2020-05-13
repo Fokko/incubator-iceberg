@@ -52,9 +52,10 @@ class Bucket(Transform):
         return bucket_type_func(n)
 
     def __init__(self, n):
+        super().__init__()
         self.n = n
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if id(self) == id(other):
             return True
         if other is None or not isinstance(other, Bucket):

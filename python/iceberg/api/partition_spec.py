@@ -14,7 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
+from typing import Dict, Set
 from urllib.parse import quote_plus
 
 from iceberg.exceptions import ValidationException
@@ -31,11 +31,11 @@ class PartitionSpec(object):
     PARTITION_DATA_ID_START = 1000
 
     @staticmethod
-    def UNPARTITIONED_SPEC():
+    def UNPARTITIONED_SPEC() -> 'PartitionSpec':
         return PartitionSpec(Schema(), 0, [])
 
     @staticmethod
-    def unpartitioned():
+    def unpartitioned() -> 'PartitionSpec':
         return PartitionSpec.UNPARTITIONED_SPEC()
 
     def __init__(self, schema, spec_id, fields):
@@ -57,7 +57,7 @@ class PartitionSpec(object):
     @property
     def java_classes(self):
         if self.__java_classes is None:
-            self.__java_classes
+            return self.__java_classes
         for field in self.__fields:
             source_type = self.schema.find_type(field.source_id)
             result = field.transform().get_result_by_type(source_type)
@@ -68,7 +68,7 @@ class PartitionSpec(object):
     def get_field_by_source_id(self, field_id):
         return self.lazy_fields_by_source_id().get(field_id)
 
-    def partition_type(self):
+    def partition_type(self) -> StructType:
         struct_fields = list()
         for i, field in enumerate(self.__fields):
             source_type = self.schema.find_type(field.source_id)
@@ -85,7 +85,7 @@ class PartitionSpec(object):
     def escape(self, string):
         return quote_plus(string, encoding="UTF-8")
 
-    def partition_to_path(self, data):
+    def partition_to_path(self, data) -> str:
         sb = list()
         java_classes = self.java_classes
         for i, jclass in enumerate(java_classes):
@@ -100,7 +100,7 @@ class PartitionSpec(object):
 
         return "".join(sb)
 
-    def compatible_with(self, other):
+    def compatible_with(self, other) -> bool:
         if self.__eq__(other):
             return True
 
@@ -114,7 +114,7 @@ class PartitionSpec(object):
 
         return True
 
-    def lazy_fields_by_source_id(self):
+    def lazy_fields_by_source_id(self) -> Dict:
         if self.fields_by_source_id is None:
             self.fields_by_source_id = dict()
             for field in self.fields:
@@ -122,7 +122,7 @@ class PartitionSpec(object):
 
         return self.fields_by_source_id
 
-    def identity_source_ids(self):
+    def identity_source_ids(self) -> Set[str]:
         source_ids = set()
         fields = self.fields
         for field in fields:
@@ -145,7 +145,7 @@ class PartitionSpec(object):
 
         return self.fields_by_name
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if id(self) == id(other):
             return True
 
@@ -154,7 +154,7 @@ class PartitionSpec(object):
 
         return self.__fields == other.__fields
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return not self.__eq__(other)
 
     def __hash__(self):
@@ -166,7 +166,7 @@ class PartitionSpec(object):
     def __str__(self):
         return self.__repr__()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         sb = ["["]
 
         for field in self.__fields:
@@ -181,7 +181,7 @@ class PartitionSpec(object):
         return "".join(sb)
 
     @staticmethod
-    def builder_for(schema):
+    def builder_for(schema) -> 'PartitionSpecBuilder':
         return PartitionSpecBuilder(schema)
 
     @staticmethod
@@ -202,11 +202,11 @@ class PartitionSpecBuilder(object):
         self.partition_names = set()
         self.spec_id = 0
 
-    def with_spec_id(self, spec_id):
+    def with_spec_id(self, spec_id) -> 'PartitionSpecBuilder':
         self.spec_id = spec_id
         return self
 
-    def check_and_add_partition_name(self, name):
+    def check_and_add_partition_name(self, name) -> 'PartitionSpecBuilder':
         if name is None or name == "":
             raise RuntimeError("Cannot use empty or null partition name")
         if name in self.partition_names:

@@ -18,7 +18,7 @@
 
 class ScanTask(object):
 
-    def is_file_scan_task(self):
+    def is_file_scan_task(self) -> bool:
         return False
 
     def as_file_scan_task(self):

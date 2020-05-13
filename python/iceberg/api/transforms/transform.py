@@ -36,5 +36,5 @@ class Transform(object):
     def project_strict(self, name, predicate):
         raise NotImplementedError()
 
-    def to_human_string(self, value):
+    def to_human_string(self, value) -> str:
         return str(value)

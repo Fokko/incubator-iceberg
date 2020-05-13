@@ -40,7 +40,7 @@ class FileScanTask(ScanTask):
     def residual(self):
         raise NotImplementedError()
 
-    def is_file_scan_task(self):
+    def is_file_scan_task(self) -> bool:
         return True
 
     def as_file_scan_task(self):

@@ -144,11 +144,11 @@ class Schema(object):
 
         return select(self, selected)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.struct.fields)
 
     def __repr__(self):
         return "Schema(%s)" % ",".join([str(field) for field in self.struct.fields])
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "table {\n%s\n}" % Schema.NEWLINE.join([" " + str(field) for field in self.struct.fields])

@@ -23,7 +23,7 @@ class PartitionField(object):
         self.name = name
         self.transform = transform
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if id(self) == id(other):
             return True
         elif other is None or not isinstance(other, PartitionField):
@@ -31,7 +31,7 @@ class PartitionField(object):
 
         return self.source_id == other.source_id and self.name == other.name and self.transform == other.transform
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return not self.__eq__(other)
 
     def __hash__(self):

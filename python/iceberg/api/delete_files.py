@@ -20,14 +20,14 @@ from .pending_update import PendingUpdate
 
 class DeleteFiles(PendingUpdate):
 
-    def delete_files(self, path=None, datafile=None):
+    def delete_files(self, path=None, datafile=None) -> 'DeleteFiles':
         if datafile is not None:
             path = datafile.path
 
         self._delete_from_path(path)
         return self
 
-    def _delete_from_path(self):
+    def _delete_from_path(self, path):
         raise NotImplementedError()
 
     def delete_from_row_filter(self, expr):

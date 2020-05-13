@@ -16,6 +16,7 @@
 # under the License.
 
 from enum import Enum, unique
+from typing import Optional
 
 
 @unique
@@ -24,17 +25,17 @@ class FileFormat(Enum):
     PARQUET = {"extension": "parquet", "splittable": True}
     AVRO = {"extension": "avro", "splittable": True}
 
-    def add_extension(self, filename):
+    def add_extension(self, filename: str) -> str:
         if filename.endswith(self.value["extension"]):
             return filename
         else:
             return filename + "." + self.value["extension"]
 
-    def is_splittable(self):
+    def is_splittable(self) -> bool:
         return self.value["splittable"]
 
     @staticmethod
-    def from_file_name(filename):
+    def from_file_name(filename: str) -> Optional['FileFormat']:
         last_index_of = filename.rfind('.')
         if last_index_of < 0:
             return None
@@ -42,3 +43,4 @@ class FileFormat(Enum):
         for fmt in FileFormat:
             if ext == fmt.value["extension"]:
                 return fmt
+        return None

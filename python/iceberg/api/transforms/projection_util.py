@@ -17,13 +17,14 @@
 
 
 import decimal
+from typing import Optional
 
-from iceberg.api.expressions import Expressions, Operation
+from iceberg.api.expressions import Expressions, Operation, Predicate, Transform
 
 
 class ProjectionUtil(object):
     @staticmethod
-    def truncate_integer(name, pred, transform):
+    def truncate_integer(name, pred: Predicate, transform: Transform) -> Optional[Predicate]:
         boundary = pred.lit.value
         if pred.op == Operation.LT:
             return Expressions.predicate(Operation.LT_EQ, name, transform.apply(boundary - 1))
@@ -35,10 +36,14 @@ class ProjectionUtil(object):
             return Expressions.predicate(Operation.GT_EQ, name, transform.apply(boundary))
         elif pred.op == Operation.EQ:
             return Expressions.predicate(pred.op, name, transform.apply(boundary))
+        else
+            return None
 
+    @staticmethod
     def truncate_long(name, pred, transform):
         return ProjectionUtil.truncate_integer(name, pred, transform)
 
+    @staticmethod
     def truncate_decimal(name, pred, transform):
         boundary = pred.lit.value
 
@@ -55,6 +60,7 @@ class ProjectionUtil(object):
         elif pred.op == Operation.EQ:
             return Expressions.predicate(pred.op, name, transform.apply(boundary))
 
+    @staticmethod
     def truncate_array(name, pred, transform):
         boundary = pred.lit.value
 

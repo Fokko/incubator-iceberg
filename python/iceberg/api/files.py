@@ -30,11 +30,11 @@ from .io import (InputFile,
 class Files(object):
 
     @staticmethod
-    def local_output(file):
+    def local_output(file) -> 'LocalOutputFile':
         return LocalOutputFile(file)
 
     @staticmethod
-    def local_input(file):
+    def local_input(file) -> 'LocalInputFile':
         return LocalInputFile(file)
 
 
@@ -43,11 +43,13 @@ class LocalOutputFile(OutputFile):
     def __init__(self, file):
         self.file = file
 
-    def create(self):
+    def create(self) -> 'PositionOutputStream':
         if os.path.exists(self.file):
             raise AlreadyExistsException("File already exists: %s" % self.file)
 
-        return PositionOutputStream(open(self.file, "w"))
+        # TODO: Implement the actual object
+        #return PositionOutputStream(open(self.file, "w"))
+        return PositionOutputStream()
 
     def create_or_overwrite(self):
         if os.path.exists(self.file):

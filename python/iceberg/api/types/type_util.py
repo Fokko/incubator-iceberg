@@ -16,7 +16,7 @@
 # under the License.
 
 import math
-from typing import List
+from typing import List, Optional
 
 from .type import (Type,
                    TypeID)
@@ -498,21 +498,21 @@ class CheckCompatibility(CustomOrderSchemaVisitor):
 
         return errors
 
-    def field(self, field, field_result) -> List[str]:
+    def field(self, field, field_result) -> Optional[List[str]]:
         struct = self.current_type.as_struct_type()
         curr_field = struct.field(field.field_id)
-        errors = []
+        errors: List[str] = []
 
         if curr_field is None:
             if not field.is_optional:
-                errors.add("{} is required, but is missing".format(field.name))
+                errors.append("{} is required, but is missing".format(field.name))
             return self.NO_ERRORS
 
         self.current_type = curr_field.type
 
         try:
             if not field.is_optional and curr_field.is_optional:
-                errors.add(field.name + " should be required, but is optional")
+                errors.append(field.name + " should be required, but is optional")
 
             for error in field_result:
                 if error.startswith(":"):
@@ -522,7 +522,7 @@ class CheckCompatibility(CustomOrderSchemaVisitor):
 
             return errors
         except RuntimeError:
-            pass
+            return None
         finally:
             self.current_type = struct
 

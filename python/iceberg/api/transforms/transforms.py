@@ -17,6 +17,8 @@
 
 import re
 
+from iceberg.api.transforms import Transform
+
 from .bucket import Bucket
 from .dates import Dates
 from .identity import Identity
@@ -42,7 +44,7 @@ class Transforms(object):
         pass
 
     @staticmethod
-    def from_string(type, transform):
+    def from_string(type, transform) -> Transform:
         match = Transforms.HAS_WIDTH.match(transform)
 
         if match is not None:
@@ -63,11 +65,11 @@ class Transforms(object):
         raise RuntimeError("Unknown transform: %s" % transform)
 
     @staticmethod
-    def identity(type_var):
+    def identity(type_var) -> Identity:
         return Identity.get(type_var)
 
     @staticmethod
-    def year(type_var):
+    def year(type_var) -> Transform:
         if type_var.type_id == TypeID.DATE:
             return Dates("year", "year")
         elif type_var.type_id == TypeID.TIMESTAMP:
@@ -76,7 +78,7 @@ class Transforms(object):
             raise RuntimeError("Cannot partition type %s by year" % type_var)
 
     @staticmethod
-    def month(type_var):
+    def month(type_var) -> Transform:
         if type_var.type_id == TypeID.DATE:
             return Dates("month", "month")
         elif type_var.type_id == TypeID.TIMESTAMP:
@@ -85,7 +87,7 @@ class Transforms(object):
             raise RuntimeError("Cannot partition type %s by month" % type_var)
 
     @staticmethod
-    def day(type_var):
+    def day(type_var) -> Transform:
         if type_var.type_id == TypeID.DATE:
             return Dates("day", "day")
         elif type_var.type_id == TypeID.TIMESTAMP:
@@ -94,7 +96,7 @@ class Transforms(object):
             raise RuntimeError("Cannot partition type %s by day" % type_var)
 
     @staticmethod
-    def hour(type_var):
+    def hour(type_var) -> Transform:
         if type_var.type_id == TypeID.DATE:
             return Dates("hour", "hour")
         elif type_var.type_id == TypeID.TIMESTAMP:
@@ -103,9 +105,9 @@ class Transforms(object):
             raise RuntimeError("Cannot partition type %s by hour" % type_var)
 
     @staticmethod
-    def bucket(type_var, num_buckets):
+    def bucket(type_var, num_buckets) -> Bucket:
         return Bucket.get(type_var, num_buckets)
 
     @staticmethod
-    def truncate(type_var, width):
+    def truncate(type_var, width) -> Truncate:
         return Truncate.get(type, width)

@@ -19,6 +19,7 @@ import io
 import logging
 import re
 import time
+from typing import Any, Dict
 from urllib.parse import urlparse
 
 import boto3  # type: ignore
@@ -33,7 +34,7 @@ from .file_system import FileSystem
 _logger = logging.getLogger(__name__)
 
 
-S3_CLIENT = dict()
+S3_CLIENT: Dict[str, Dict[str, Any]] = dict()
 BOTO_STS_CLIENT = boto3.client('sts')
 CONF = None
 ROLE_ARN = "default"
