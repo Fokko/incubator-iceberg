@@ -16,7 +16,7 @@
 # under the License.
 
 import math
-from typing import List, Optional
+from typing import List, Optional, Iterable
 
 from .type import (Type,
                    TypeID)
@@ -451,7 +451,7 @@ class CheckCompatibility(CustomOrderSchemaVisitor):
     def read_compatibility_errors(read_schema, write_schema):
         visit(write_schema, CheckCompatibility(read_schema, False))
 
-    NO_ERRORS: List[str] = []
+    NO_ERRORS: Tuple[str] = ()
 
     def __init__(self, schema, check_ordering):
         self.schema = schema
@@ -498,7 +498,7 @@ class CheckCompatibility(CustomOrderSchemaVisitor):
 
         return errors
 
-    def field(self, field, field_result) -> Optional[List[str]]:
+    def field(self, field, field_result) -> Optional[Iterable[str]]:
         struct = self.current_type.as_struct_type()
         curr_field = struct.field(field.field_id)
         errors: List[str] = []

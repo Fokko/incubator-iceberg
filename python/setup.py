@@ -46,7 +46,7 @@ setup(
             "virtualenv<20.0.0",
         ],
     },
-    setup_requires=['setupmeta'],
+    setup_requires=['setupmeta==2.7.'],
     license="Apache License 2.0",
     classifiers=[
         "License :: OSI Approved :: Apache Software License",
